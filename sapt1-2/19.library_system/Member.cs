@@ -1,4 +1,5 @@
-namespace Library;
+namespace LibraryCatalog;
+using LibraryCatalog.Abstractions;
 
 using System;
 

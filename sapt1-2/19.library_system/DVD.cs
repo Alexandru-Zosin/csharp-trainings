@@ -1,11 +1,11 @@
 using System;
 
-namespace Library;
+namespace LibraryCatalog;
+using LibraryCatalog.Abstractions;
 
-public class DVD : LibraryItem
+public sealed class DVD : LibraryItem
 {
     public string UPC { get; }
-    public ItemType Type = ItemType.DVD;
 
     public DVD(string title, string upc) : base(title)
     {
@@ -17,6 +17,6 @@ public class DVD : LibraryItem
 
     public override string GetDescription()
     {
-        return $"DVD: {Title} with UPC: {UPC}"
+        return $"DVD: {Title} with UPC: {UPC}";
     }
 }

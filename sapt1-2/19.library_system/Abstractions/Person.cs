@@ -1,12 +1,12 @@
 using System;
-namespace Library.Abstractions;
+namespace LibraryCatalog.Abstractions;
 
-public abstract class Person(Guid guid, string name)
+public abstract class Person
 {
     public Guid Guid { get; } // immutable after construction
     public string Name { get; }
 
-    protected Person(Name name)
+    protected Person(string name)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Invalid name. A name is required.");

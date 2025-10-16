@@ -1,5 +1,5 @@
 using System;
-namespace Library.Abstractions;
+namespace LibraryCatalog.Abstractions;
 
 public abstract class LibraryItem
 {
@@ -15,6 +15,6 @@ public abstract class LibraryItem
 
     public virtual string GetDescription()
     {
-        return $"Item: {Title}"
+        return $"Item: {Title}";
     }
 }

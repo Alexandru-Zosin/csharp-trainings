@@ -1,18 +1,15 @@
-namespace Cinema;
-using Cinema.Enums;
+namespace CinemaNamespace;
+using CinemaNamespace.Enums;
 
-public readonly record struct Seat(int Col, int Row)
-{   
-    public TicketZone GetZone()
+public sealed record Seat
+{
+    public int Row { get; }
+    public int Number { get; }
+    public Seat(int row, int number)
     {
-        switch(Row)
-        {
-            case <= 3:
-                return TicketZone.Low;
-            case <= 7:
-                return TicketZone.Mid;
-            default:
-                return TicketZone.Upper;
-        }
+        if (row <= 0) throw new ArgumentOutOfRangeException(nameof(row));
+        if (number <= 0) throw new ArgumentOutOfRangeException(nameof(number));
+        Row = row; 
+        Number = number;
     }
 }

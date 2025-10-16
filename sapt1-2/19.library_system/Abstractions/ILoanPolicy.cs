@@ -1,7 +1,7 @@
 using System;
-namespace Library.Abstractions;
+namespace LibraryCatalog.Abstractions;
 
 public interface ILoanPolicy
 {
-    public TimeSpan GetLoanPeriod(ILoanable item);
+    public TimeSpan GetLoanPeriod();
 }

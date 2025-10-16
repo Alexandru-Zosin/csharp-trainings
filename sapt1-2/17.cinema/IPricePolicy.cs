@@ -1,6 +1,6 @@
-namespace Cinema;
+namespace CinemaNamespace;
 
-public interface ITicketPricer
+public interface IPricePolicy
 {
     decimal GetPrice(Ticket ticket); // public is auto filled (implicitly understood)
 }

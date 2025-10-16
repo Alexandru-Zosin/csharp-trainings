@@ -1,15 +1,13 @@
-namespace Library;
+namespace LibraryCatalog;
 using System;
+using LibraryCatalog.Abstractions;
 
-public class Book : LibraryItem, ILoanable
+public sealed class Book : LibraryItem, ILoanable
 {
     public string ISBN { get; }
-    public ILoanPolicy Policy { get; set; }
-    public ItemType Type = ItemType.Book;
+    public ILoanPolicy Policy { get; set; } 
 
-    public bool IsBorrowed { get; set; }
-    public DateTimeOffset? BorrowMoment { get; set; }
-    public DateTimeOffset? ReturnMoment { get; set; }
+    public bool IsBorrowed { get; private set; } = false;
     public TimeSpan? DurationOfBorrow { get; private set; }
 
     public Book(string title, string isbn, ILoanPolicy policy) : base(title)
@@ -18,7 +16,20 @@ public class Book : LibraryItem, ILoanable
             throw new ArgumentException("Needs a valid ISBN");
         ISBN = isbn;
         Policy = policy;
-        DurationOfBorrow = Policy.GetLoanPeriod(self);
+        DurationOfBorrow = Policy.GetLoanPeriod();
+    }
+
+    public void MarkBorrowed()
+    {
+        if (IsBorrowed)
+            throw new InvalidOperationException("Book already borrowed.");
+        IsBorrowed = true;
+    }
+
+    public void MarkReturned()
+    {
+        if (!IsBorrowed) throw new InvalidOperationException("Not borrowed.");
+        IsBorrowed = false;
     }
 
     public override string GetDescription()

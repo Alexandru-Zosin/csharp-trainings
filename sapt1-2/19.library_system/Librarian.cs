@@ -1,7 +1,7 @@
-namespace Library;
+namespace LibraryCatalog;
 using System;
+using LibraryCatalog.Abstractions;
 
-namespace Library.Abstractions;
 public sealed class Librarian : Person
 {
     public string EmployeeId { get; }

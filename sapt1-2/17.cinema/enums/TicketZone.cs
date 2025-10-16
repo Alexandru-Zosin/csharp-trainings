@@ -1,3 +1,3 @@
-namespace Cinema.Enums;
+namespace CinemaNamespace.Enums;
 
-public enum TicketZone { Low, Mid, Upper };
+public enum TicketZone { Low, Mid, Upper, VIP };
