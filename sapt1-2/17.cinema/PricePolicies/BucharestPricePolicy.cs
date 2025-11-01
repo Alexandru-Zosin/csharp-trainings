@@ -4,7 +4,7 @@ using CinemaNamespace.Enums;
 using System.Collections;
 using System.Collections.Generic;
 
-public sealed class Bucharest : IPricePolicy
+public sealed class BucharestPricePolicy : IPricePolicy
 {
     public IDictionary<TicketZone, decimal> ZoneMultipliers { get; private set; } =
         new Dictionary<TicketZone, decimal>

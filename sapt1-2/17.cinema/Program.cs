@@ -29,7 +29,7 @@ var seats = AllSeats().ToArray();
 // ----- Cinemas with policies -----
 var cinemas = new Dictionary<string, Cinema>
 {
-    ["Bucharest MegaMall"] = new Cinema(new Bucharest(), new DefaultSeatZonePolicy()),
+    ["Bucharest MegaMall"] = new Cinema(new BucharestPricePolicy(), new DefaultSeatZonePolicy()),
     ["Iasi Palas"] = new Cinema(new IasiPricePolicy(), new DefaultSeatZonePolicy()),
     ["Constanta CityPark"] = new Cinema(new ConstantaPricePolicy(), new DefaultSeatZonePolicy()),
 };
