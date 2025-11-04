@@ -18,22 +18,22 @@ public sealed class InboxWatcher : IDisposable
         _cts = cts;
         _folderWatch = new FileSystemWatcher(_cfg.Path!)
         {
-            Filter = _cfg.FileType!,
+           // Filter = _cfg.FileType!,
             IncludeSubdirectories = _cfg.IncludeSubdirectories ?? false,
             EnableRaisingEvents = true
         };
 
         _folderWatch.Renamed += async (_, eventArgs) =>
         {
-            if (Path.GetExtension(eventArgs.OldFullPath).Equals(".tmp", StringComparison.OrdinalIgnoreCase) &&
-                Path.GetExtension(eventArgs.FullPath).Equals(".jsonl", StringComparison.OrdinalIgnoreCase))
-            {
+       //     if (Path.GetExtension(eventArgs.OldFullPath).Equals(".tmp", StringComparison.OrdinalIgnoreCase) &&
+       //         Path.GetExtension(eventArgs.FullPath).Equals(".jsonl", StringComparison.OrdinalIgnoreCase))
+        //    {
                 await _worker.EnqueueIfNewAsync(NormalizePath(eventArgs.FullPath), _cts.Token);
-            }
+       //     }
         };
-        _folderWatch.Error += (_, e) =>
-            Console.WriteLine("FSW overflow: " + e.GetException().Message);
-        _rescanFolderTaskTimer = new Timer(_ => RescanFolder(), null, TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(1));
+        // _folderWatch.Error += (_, e) =>
+        //      Console.WriteLine("FSW overflow: " + e.GetException().Message);
+        //  _rescanFolderTaskTimer = new Timer(_ => RescanFolder(), null, TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(1));
         // interal OS-level native timer
     }
 
@@ -49,9 +49,9 @@ public sealed class InboxWatcher : IDisposable
             _ = _worker.EnqueueIfNewAsync(f, _cts.Token);
     }
 
-    public Task StartAsync()
+    public async Task StartAsync()
     {
-        return _worker.ChannelLoop(_cts.Token);
+        await _worker.ChannelLoop(_cts.Token);
     }
 
     public void Stop()

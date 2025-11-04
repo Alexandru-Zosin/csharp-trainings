@@ -18,11 +18,12 @@ public sealed class FileProcessor
 
     public async Task ProcessAsync()
     {
+        Console.WriteLine($"File {_path} is trying to be opened processed ... ");
         await using var fs = await TryOpenWithRetryAsync(_path);
         if (fs is null) return;
 
         //if (!await ValidateChecksumAsync(_path, fs)) return;
-
+        Console.WriteLine($"File {_path} is being processed ... ");
         var sw = Stopwatch.StartNew();
         int count = 0;
 
@@ -31,12 +32,12 @@ public sealed class FileProcessor
             if (dto == null) continue;
             count++;
             foreach (var kpi in _kpiRegistry.ResolveFor(dto.GetType()))
-                kpi.CalculateUntyped(dto, KPICalculator.State);
+                kpi.CalculateUntyped(dto);
         }
 
         sw.Stop();
         await File.AppendAllTextAsync(
-            Path.Combine(PathConfig.FilesDir, "file_metrics.log"), 
+            Path.Combine(PathConfig.DataDir, "file_metrics.log"), 
             $"{DateTime.UtcNow:o} | {_path} | entries={count} | duration={sw.ElapsedMilliseconds}ms{Environment.NewLine}"
         );
     }

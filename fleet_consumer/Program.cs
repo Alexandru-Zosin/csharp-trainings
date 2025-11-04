@@ -16,6 +16,9 @@ var kpis = new IKPI[]
     new KpiSuccessfulDeliveries()
 };
 
+foreach (var kpi in kpis)
+    await kpi.DeserializeFromFileAsync(PathConfig.DataDir);
+
 using var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (s, e) =>
 {
@@ -29,3 +32,8 @@ using var watcher = new InboxWatcher(cfg, worker, cts);
 
 Console.WriteLine("Watching folder. Press CtrlC to exit.");
 await watcher.StartAsync();
+foreach (var kpi in kpis)
+{
+    await kpi.SerializeAsync(PathConfig.DataDir);
+    await kpi.WriteMetricToFileAsync(PathConfig.DataDir);
+}

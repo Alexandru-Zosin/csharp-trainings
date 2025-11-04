@@ -1,0 +1,4 @@
+AverageLoad: 27.330625
+AverageFuelUsedPerVehicle: 0
+PeakLoad: 41
+SuccessfulDeliveries: 391
