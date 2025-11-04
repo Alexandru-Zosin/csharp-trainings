@@ -17,7 +17,7 @@ var kpis = new IKPI[]
 };
 
 foreach (var kpi in kpis)
-    await kpi.DeserializeFromFileAsync(PathConfig.DataDir);
+    await kpi.DeserializeFromFileAsync(Path.Combine(PathConfig.DataDir, "KPICheckpointSave"));
 
 using var cts = new CancellationTokenSource();
 Console.CancelKeyPress += (s, e) =>
@@ -34,6 +34,6 @@ Console.WriteLine("Watching folder. Press CtrlC to exit.");
 await watcher.StartAsync();
 foreach (var kpi in kpis)
 {
-    await kpi.SerializeAsync(PathConfig.DataDir);
-    await kpi.WriteMetricToFileAsync(PathConfig.DataDir);
+    await kpi.SerializeAsync(Path.Combine(PathConfig.DataDir, "KPICheckpointSave"));
+    await kpi.WriteMetricToFileAsync(Path.Combine(PathConfig.DataDir));
 }

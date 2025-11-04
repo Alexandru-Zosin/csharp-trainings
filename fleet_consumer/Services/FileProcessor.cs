@@ -18,14 +18,14 @@ public sealed class FileProcessor
 
     public async Task ProcessAsync()
     {
-        Console.WriteLine($"File {_path} is trying to be opened processed ... ");
         await using var fs = await TryOpenWithRetryAsync(_path);
         if (fs is null) return;
 
         //if (!await ValidateChecksumAsync(_path, fs)) return;
-        Console.WriteLine($"File {_path} is being processed ... ");
         var sw = Stopwatch.StartNew();
         int count = 0;
+
+        Console.WriteLine($"File {Path.GetFileName(_path)} started processing (stopwatch started) ... ");
 
         await foreach (var dto in JsonDTOReader.ReadArrayFileAsync(_path))
         {
@@ -38,14 +38,14 @@ public sealed class FileProcessor
         sw.Stop();
         await File.AppendAllTextAsync(
             Path.Combine(PathConfig.DataDir, "file_metrics.log"), 
-            $"{DateTime.UtcNow:o} | {_path} | entries={count} | duration={sw.ElapsedMilliseconds}ms{Environment.NewLine}"
+            $"{Path.GetFileName(_path)} | {sw.ElapsedMilliseconds}ms{Environment.NewLine} | no={count} | {DateTime.UtcNow:o}"
         );
     }
 
     private static async Task<FileStream?> TryOpenWithRetryAsync(string path)
     {
         int retries = 3;
-        var delay = TimeSpan.FromMilliseconds(100);
+        var delay = TimeSpan.FromMilliseconds(200);
 
         for (int i = 0; i < retries; i++)
         {
@@ -56,7 +56,7 @@ public sealed class FileProcessor
             catch (Exception ex)
             {
                 await File.AppendAllTextAsync(
-                    "errors.log",
+                    Path.Combine(PathConfig.FilesDir, "errorFiles", "errors.log"),
                     $"{DateTime.UtcNow:o} | File open failed try {i + 1}: {ex.Message}{Environment.NewLine}"
                 );
 
@@ -65,8 +65,8 @@ public sealed class FileProcessor
         }
 
         await File.AppendAllTextAsync(
-            "errors.log",
-            $"{DateTime.UtcNow:o} | File open failed after {retries} attempts{Environment.NewLine}"
+            Path.Combine(PathConfig.FilesDir, "errorFiles", "errors.log"),
+            $"File open failed after {retries} attempts{Environment.NewLine}"
         );
         return null;
     }
@@ -95,7 +95,7 @@ public sealed class FileProcessor
             return true;
 
         await File.AppendAllTextAsync(
-            "errors.log",
+            Path.Combine(PathConfig.FilesDir, "errorFiles", "errors.log"),
             $"{DateTime.UtcNow:o} | Checksum mismatch for {path}{Environment.NewLine}"
         ).ConfigureAwait(false);
 

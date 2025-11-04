@@ -1,12 +1,12 @@
 using DTO.InputType;
-using System.Text.Json;
-
-
+using System.Text.Json.Serialization;
 namespace KPI;
 
 public sealed class KpiAverageFuelUsedPerVehicle : KPIBase<IGPS>
 {
+    [JsonInclude]
     private int _totalFuel;
+    [JsonInclude]
     private int _count;
     public override string Name => "AverageFuelUsedPerVehicle";
 

@@ -1,12 +1,12 @@
 using DTO.InputType;
-using System.Text.Json;
-
-
+using System.Text.Json.Serialization;
 namespace KPI;
 
 public sealed class KpiAverageLoad : KPIBase<ITelemetry>
 {
+    [JsonInclude]
     private long _totalLoad;
+    [JsonInclude]
     private int _count;
     public override string Name => "AverageLoad";
 

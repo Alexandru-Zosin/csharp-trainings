@@ -1,10 +1,11 @@
-using System.Text.Json;
+using System.Text.Json.Serialization;
 using DTO.InputType;
 using DTO;
 namespace KPI;
 
 public sealed class KpiSuccessfulDeliveries : KPIBase<ITelemetry>
 {
+    [JsonInclude]
     private long _successfulDeliveries;
     public override string Name => "SuccessfulDeliveries";
 

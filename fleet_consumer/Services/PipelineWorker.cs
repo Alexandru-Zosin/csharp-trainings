@@ -13,9 +13,6 @@ public sealed class PipelineWorker : IPipelineWorker
     private readonly SemaphoreSlim _concurrencySemaphore;
     private readonly Channel<string> _channel;
     private readonly ConcurrentDictionary<string, byte> _pendingInChannel;
-    //private readonly IList<Task> _runningTasks = new List<Task>();
-    //private readonly object _tasksLock = new();
-
 
     public PipelineWorker(
         KPIRegistry kpiRegistry,
@@ -103,70 +100,6 @@ public sealed class PipelineWorker : IPipelineWorker
             }
         }
     }
-
-    /*public async Task ChannelLoop(CancellationToken cts)
-    {
-        Stopwatch? sw = null;
-
-        try
-        {
-            await foreach (var file in _channel.Reader.ReadAllAsync(cts))
-            {
-                sw ??= Stopwatch.StartNew();
-                await _concurrencySemaphore.WaitAsync(cts);
-
-                Console.WriteLine($"[{DateTime.UtcNow:O}] Processing file: {file}");
-
-                var task = Task.Run(async () =>
-                {
-                    try
-                    {
-                        cts.ThrowIfCancellationRequested();
-                        await new FileProcessor(file, _kpiRegistry).ProcessAsync().ConfigureAwait(false);
-                    }
-                    finally
-                    {
-                        _pendingInChannel.TryRemove(file, out _);
-                        _concurrencySemaphore.Release();
-                    }
-                }, cts);
-
-                lock (_tasksLock)
-                    _runningTasks.Add(task);
-
-                // Remove it automatically when finished
-                _ = task.ContinueWith(t =>
-                {
-                    lock (_tasksLock)
-                        _runningTasks.Remove(t);
-                }, TaskContinuationOptions.ExecuteSynchronously);
-            }
-        }
-        catch (OperationCanceledException)
-        {
-            await WaitAllRunningTasksAsync();
-        }
-        finally
-        {
-            if (sw is not null)
-            {
-                sw.Stop();
-                var logLine = $"Entire operation duration={sw.ElapsedMilliseconds}ms{Environment.NewLine}";
-                await File.AppendAllTextAsync(Path.Combine(PathConfig.DataDir, "file_metrics.log"), logLine);
-            }
-        }
-    }
-
-    private async Task WaitAllRunningTasksAsync()
-    {
-        try
-        {
-            await Task.WhenAll(_runningTasks.ToArray());
-        }
-        catch (Exception) {  
-    }
-    
-    */
     public void Dispose()
     {
         _channel.Writer.TryComplete();

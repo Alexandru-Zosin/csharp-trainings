@@ -1,10 +1,10 @@
-using System.Text.Json;
 using DTO.InputType;
-
+using System.Text.Json.Serialization;
 namespace KPI;
 
 public sealed class KpiPeakLoad : KPIBase<ITelemetry>
 {
+    [JsonInclude]
     private int _maxLoad;
     public override string Name => "PeakLoad";
 

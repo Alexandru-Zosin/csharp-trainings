@@ -1,6 +1,6 @@
 using DTO;
 using System.Text.Json;
-
+using Config;
 namespace Services;
 
 public static class JsonDTOReader
@@ -37,7 +37,7 @@ public static class JsonDTOReader
             catch (Exception ex)
             {
                 await File.AppendAllTextAsync(
-                    "errors.log",
+                    Path.Combine(PathConfig.FilesDir, "errorFiles", "errors.log"),
                     $"{DateTime.UtcNow:o} | Parse error: {ex.Message}{Environment.NewLine}"
                 );
             }
